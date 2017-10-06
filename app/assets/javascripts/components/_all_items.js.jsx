@@ -1,39 +1,37 @@
 var AllItems = React.createClass({
 
-  componentWillMount(){
-    console.log("component all items will mount");
+  handleDelete(id){
+    this.props.handleDelete(id);
   },
 
-  getInitialState(){
-    return { items: [] };
+  onUpdate(item){
+    this.props.onUpdate(item);
   },
 
-  // render() {
-  //   return(
-  //     <div>
-  //       <h1>All items</h1>
-  //     </div>
-  //   );
-  // },
+  onSearch() {
+    this.props.onSearch(this.refs.searchInput.value)
+  },
 
   render() {
-    var items = this.state.items.map((item) => {
+    var itemListing = {
+      'padding-top': 10
+    }
+
+    var items = this.props.items.map((item) => {
       return(
         <div key={item.id}>
-          <h3>{item.name}</h3>
-          <p>{item.description}</p>
+         <Item item={item} handleDelete={this.handleDelete.bind(this, item.id)} handleEdit={this.handleEdit} handleUpdate={this.onUpdate} />
         </div>
       )
     });
     return(
       <div>
+        <div style={itemListing}>
+          <input className="searchbar-edit" type="text" ref="searchInput" placeholder="Search By Name or Description" />
+          <button onClick={this.onSearch}>Search</button>
+        </div>
         {items}
       </div>
     )
-  },
-
-  componentDidMount(){
-    console.log("component is mounted");
-    $.getJSON('/api/v1/items.json', (response) => { this.setState({ items: response }) });
-  }    
+  }
 });
